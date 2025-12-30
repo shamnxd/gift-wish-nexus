@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { saveLetter } from '@/lib/firebase/letters';
 
 const giftCategories = [
   { value: 'toys', label: '🧸 Toys & Games' },
@@ -44,10 +45,23 @@ const WriteLetter: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast.success('Your letter has been sent to Santa!');
+    try {
+      await saveLetter({
+        childName: formData.childName,
+        age: Number(formData.age),
+        category: formData.category || 'other',
+        message: formData.message,
+        location: formData.location || 'Unknown',
+      }, formData.drawing || undefined);
+      
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      toast.success('Your letter has been sent to Santa!');
+    } catch (error) {
+      console.error('Error saving letter:', error);
+      setIsSubmitting(false);
+      toast.error('Failed to send letter. Please try again.');
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

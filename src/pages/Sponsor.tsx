@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Heart, Building2, Gift, Upload, CheckCircle2, Sparkles, Users, Globe } from 'lucide-react';
+import { Heart, Building2, Gift, Upload, CheckCircle2, Sparkles, Users, Globe, CreditCard, IndianRupee } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Snowfall from '@/components/Snowfall';
@@ -9,7 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
+import { saveSponsor } from '@/lib/firebase/sponsors';
 
 const giftTypes = [
   { value: '10', label: '10 Gifts' },
@@ -22,6 +24,8 @@ const giftTypes = [
 const Sponsor: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'paypal' | 'other'>('paypal');
+  const [transactionId, setTransactionId] = useState('');
   const [formData, setFormData] = useState({
     companyName: '',
     contactEmail: '',
@@ -31,6 +35,10 @@ const Sponsor: React.FC = () => {
     logo: null as File | null,
   });
 
+  const amountPerGift = 100; // 100rs per gift
+  const giftCount = formData.giftCount === 'custom' ? Number(formData.customCount) || 0 : Number(formData.giftCount) || 0;
+  const totalAmount = giftCount * amountPerGift;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -39,11 +47,46 @@ const Sponsor: React.FC = () => {
       return;
     }
 
+    if (formData.giftCount === 'custom' && (!formData.customCount || Number(formData.customCount) <= 0)) {
+      toast.error('Please enter a valid number of gifts');
+      return;
+    }
+
+    if (giftCount <= 0) {
+      toast.error('Please select number of gifts to sponsor');
+      return;
+    }
+
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast.success('Thank you for your sponsorship!');
+    try {
+      const sponsorId = await saveSponsor({
+        companyName: formData.companyName,
+        contactEmail: formData.contactEmail,
+        giftCount: giftCount,
+        amountPerGift: amountPerGift,
+        totalAmount: totalAmount,
+        paymentMethod: paymentMethod,
+        paymentStatus: 'confirmed',
+        paymentTransactionId: transactionId || undefined,
+        message: formData.message || undefined,
+        createdAt: new Date(),
+      }, formData.logo || undefined);
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      toast.success('Thank you for your sponsorship! Payment confirmed.');
+    } catch (error) {
+      console.error('Error saving sponsor:', error);
+      setIsSubmitting(false);
+      toast.error('Failed to submit sponsorship. Please try again.');
+    }
+  };
+
+  const handlePayPalPayment = () => {
+    // Mock PayPal payment - just generate a transaction ID
+    const mockTransactionId = `PAYPAL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    setTransactionId(mockTransactionId);
+    toast.success('Payment processed successfully!');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,9 +124,29 @@ const Sponsor: React.FC = () => {
                 
                 <div className="bg-card border border-border rounded-2xl p-8 mb-8 shadow-card">
                   <Sparkles className="w-8 h-8 text-amber-500 mx-auto mb-4" />
-                  <p className="text-lg text-foreground leading-relaxed">
-                    Your generous sponsorship of {formData.giftCount === 'custom' ? formData.customCount : formData.giftCount} gifts will bring joy to children this Christmas!
+                  <p className="text-lg text-foreground leading-relaxed mb-4">
+                    Your generous sponsorship of {giftCount} gifts will bring joy to children this Christmas!
                   </p>
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-muted-foreground">Amount per gift:</span>
+                      <span className="font-semibold text-foreground">₹{amountPerGift}</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-muted-foreground">Number of gifts:</span>
+                      <span className="font-semibold text-foreground">{giftCount}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-lg pt-2 border-t border-border">
+                      <span className="font-semibold text-foreground">Total Amount:</span>
+                      <span className="font-bold text-primary text-xl">₹{totalAmount}</span>
+                    </div>
+                    {transactionId && (
+                      <div className="mt-4 pt-4 border-t border-border">
+                        <p className="text-xs text-muted-foreground mb-1">Transaction ID:</p>
+                        <p className="text-sm font-mono text-foreground">{transactionId}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -228,6 +291,24 @@ const Sponsor: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Payment Summary */}
+                  {giftCount > 0 && (
+                    <div className="bg-muted/50 rounded-xl p-4 space-y-2 animate-fade-in">
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Amount per gift:</span>
+                        <span className="font-semibold text-foreground">₹{amountPerGift}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Number of gifts:</span>
+                        <span className="font-semibold text-foreground">{giftCount}</span>
+                      </div>
+                      <div className="flex justify-between items-center pt-2 border-t border-border">
+                        <span className="font-semibold text-foreground">Total Amount:</span>
+                        <span className="font-bold text-primary text-lg">₹{totalAmount}</span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="message">Message (Optional)</Label>
                     <Textarea
@@ -277,13 +358,67 @@ const Sponsor: React.FC = () => {
                 </div>
               </div>
 
+              {/* Payment Method */}
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-primary" />
+                  Payment Method
+                </h2>
+                
+                <div className="space-y-4">
+                  <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'paypal' | 'other')}>
+                    <div className="flex items-center space-x-2 p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer">
+                      <RadioGroupItem value="paypal" id="paypal" />
+                      <Label htmlFor="paypal" className="cursor-pointer flex-1 flex items-center gap-2">
+                        <span className="text-xl">💳</span>
+                        <span>PayPal</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer">
+                      <RadioGroupItem value="other" id="other" />
+                      <Label htmlFor="other" className="cursor-pointer flex-1 flex items-center gap-2">
+                        <span className="text-xl">🏦</span>
+                        <span>Other Payment Method</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  {paymentMethod === 'paypal' && giftCount > 0 && (
+                    <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                      <p className="text-sm text-blue-900 dark:text-blue-100 mb-3">
+                        Click below to process payment via PayPal (Mock Payment)
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={handlePayPalPayment}
+                        disabled={!!transactionId}
+                      >
+                        {transactionId ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4 mr-2 text-green-600" />
+                            Payment Confirmed
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-4 h-4 mr-2" />
+                            Pay ₹{totalAmount} with PayPal
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Submit Button */}
               <Button
                 type="submit"
                 variant="christmas"
                 size="xl"
                 className="w-full"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (paymentMethod === 'paypal' && !transactionId && giftCount > 0)}
               >
                 {isSubmitting ? (
                   <>
@@ -293,7 +428,9 @@ const Sponsor: React.FC = () => {
                 ) : (
                   <>
                     <Heart className="w-5 h-5 mr-2" />
-                    Submit Sponsorship
+                    {paymentMethod === 'paypal' && !transactionId && giftCount > 0 
+                      ? 'Complete Payment First' 
+                      : 'Confirm Sponsorship'}
                   </>
                 )}
               </Button>

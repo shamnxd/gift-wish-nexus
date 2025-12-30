@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Gift, MapPin, Mail, Filter, CheckCircle2, Clock, Route, Eye, Building2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -8,79 +8,49 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { getLetters, updateLetterStatus, Letter } from '@/lib/firebase/letters';
+import { getSponsors, Sponsor } from '@/lib/firebase/sponsors';
 
-const mockLetters = [
-  {
-    id: 1,
-    childName: 'Emma Johnson',
-    age: 7,
-    location: 'New York, USA',
-    category: 'Toys & Games',
-    message: 'Dear Santa, I have been very good this year. I would love a teddy bear and some coloring books. I also helped my mom with chores every day!',
-    status: 'pending',
-    sponsor: null,
-    coordinates: { lat: 40.7128, lng: -74.006 },
-  },
-  {
-    id: 2,
-    childName: 'Lucas Martin',
-    age: 9,
-    location: 'London, UK',
-    category: 'Books & Learning',
-    message: 'Hi Santa! I love reading adventure books. Could you bring me some new ones? I finished reading 20 books this year!',
-    status: 'accepted',
-    sponsor: { name: 'BookWorld', logo: '📚' },
-    coordinates: { lat: 51.5074, lng: -0.1278 },
-  },
-  {
-    id: 3,
-    childName: 'Sofia Garcia',
-    age: 6,
-    location: 'Madrid, Spain',
-    category: 'Arts & Crafts',
-    message: 'Dear Santa, I want to be an artist when I grow up! Can you please bring me paint supplies and a canvas?',
-    status: 'delivered',
-    sponsor: { name: 'ArtSupply Co', logo: '🎨' },
-    coordinates: { lat: 40.4168, lng: -3.7038 },
-  },
-  {
-    id: 4,
-    childName: 'Oliver Brown',
-    age: 8,
-    location: 'Sydney, Australia',
-    category: 'Sports & Outdoors',
-    message: 'G\'day Santa! I would really love a new soccer ball and some cricket equipment. I play sports every day after school!',
-    status: 'pending',
-    sponsor: null,
-    coordinates: { lat: -33.8688, lng: 151.2093 },
-  },
-  {
-    id: 5,
-    childName: 'Mia Anderson',
-    age: 5,
-    location: 'Toronto, Canada',
-    category: 'Toys & Games',
-    message: 'Dear Santa, I want a dollhouse! I have been sharing my toys with my little brother all year. Love, Mia',
-    status: 'accepted',
-    sponsor: { name: 'ToyWorld', logo: '🧸' },
-    coordinates: { lat: 43.6532, lng: -79.3832 },
-  },
-];
-
-const sponsors = [
-  { name: 'ToyWorld', logo: '🧸' },
-  { name: 'BookWorld', logo: '📚' },
-  { name: 'ArtSupply Co', logo: '🎨' },
-  { name: 'Happy Games', logo: '🎮' },
-  { name: 'Sports Plus', logo: '⚽' },
-];
+// Category mapping for display
+const categoryMap: Record<string, string> = {
+  toys: 'Toys & Games',
+  books: 'Books & Learning',
+  sports: 'Sports & Outdoors',
+  arts: 'Arts & Crafts',
+  electronics: 'Electronics',
+  clothes: 'Clothes & Accessories',
+  other: 'Other',
+};
 
 const SantaDashboard: React.FC = () => {
-  const [letters, setLetters] = useState(mockLetters);
+  const [letters, setLetters] = useState<Letter[]>([]);
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLetter, setSelectedLetter] = useState<typeof mockLetters[0] | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [lettersData, sponsorsData] = await Promise.all([
+        getLetters(),
+        getSponsors(),
+      ]);
+      setLetters(lettersData);
+      setSponsors(sponsorsData);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast.error('Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredLetters = letters.filter((letter) => {
     const matchesCategory = filterCategory === 'all' || letter.category.toLowerCase().includes(filterCategory.toLowerCase());
@@ -90,25 +60,59 @@ const SantaDashboard: React.FC = () => {
     return matchesCategory && matchesStatus && matchesSearch;
   });
 
-  const handleAcceptLetter = (id: number) => {
-    setLetters(letters.map(letter => 
-      letter.id === id ? { ...letter, status: 'accepted' } : letter
-    ));
-    toast.success('Letter accepted!');
+  // Get sponsor info for a letter
+  const getSponsorForLetter = (letter: Letter) => {
+    if (letter.sponsorId) {
+      const sponsor = sponsors.find(s => s.id === letter.sponsorId);
+      if (sponsor) {
+        return { name: sponsor.companyName, logo: sponsor.logoUrl || '🏢' };
+      }
+    }
+    if (letter.sponsorName) {
+      return { name: letter.sponsorName, logo: '🏢' };
+    }
+    return null;
   };
 
-  const handleAssignSponsor = (letterId: number, sponsor: typeof sponsors[0]) => {
-    setLetters(letters.map(letter => 
-      letter.id === letterId ? { ...letter, sponsor } : letter
-    ));
-    toast.success(`Gift sponsored by ${sponsor.name}!`);
+  const handleAcceptLetter = async (id: string) => {
+    try {
+      await updateLetterStatus(id, 'accepted');
+      setLetters(letters.map(letter => 
+        letter.id === id ? { ...letter, status: 'accepted' } : letter
+      ));
+      toast.success('Letter accepted!');
+    } catch (error) {
+      console.error('Error accepting letter:', error);
+      toast.error('Failed to accept letter');
+    }
   };
 
-  const handleMarkDelivered = (id: number) => {
-    setLetters(letters.map(letter => 
-      letter.id === id ? { ...letter, status: 'delivered' } : letter
-    ));
-    toast.success('Gift marked as delivered! 🎁');
+  const handleAssignSponsor = async (letterId: string, sponsor: Sponsor) => {
+    try {
+      await updateLetterStatus(letterId, 'accepted', sponsor.id, sponsor.companyName);
+      setLetters(letters.map(letter => 
+        letter.id === letterId 
+          ? { ...letter, status: 'accepted', sponsorId: sponsor.id, sponsorName: sponsor.companyName } 
+          : letter
+      ));
+      toast.success(`Gift sponsored by ${sponsor.companyName}!`);
+    } catch (error) {
+      console.error('Error assigning sponsor:', error);
+      toast.error('Failed to assign sponsor');
+    }
+  };
+
+  const handleMarkDelivered = async (id: string) => {
+    try {
+      await updateLetterStatus(id, 'delivered');
+      setLetters(letters.map(letter => 
+        letter.id === id ? { ...letter, status: 'delivered' } : letter
+      ));
+      toast.success('Gift marked as delivered! 🎁');
+    } catch (error) {
+      console.error('Error marking as delivered:', error);
+      toast.error('Failed to update status');
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -216,8 +220,19 @@ const SantaDashboard: React.FC = () => {
               </div>
 
               {/* Letters Grid */}
-              <div className="space-y-4">
-                {filteredLetters.map((letter) => (
+              {loading ? (
+                <div className="text-center py-12">
+                  <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-muted-foreground">Loading letters...</p>
+                </div>
+              ) : filteredLetters.length === 0 ? (
+                <div className="text-center py-12">
+                  <Mail className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No letters found</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredLetters.map((letter) => (
                   <div
                     key={letter.id}
                     className={`bg-card border rounded-xl p-5 shadow-soft transition-all hover:shadow-card cursor-pointer ${
@@ -239,41 +254,42 @@ const SantaDashboard: React.FC = () => {
                           </span>
                           <span className="flex items-center gap-1">
                             <Gift className="w-3.5 h-3.5" />
-                            {letter.category}
+                            {categoryMap[letter.category] || letter.category}
                           </span>
                         </div>
                         <p className="text-sm text-foreground line-clamp-2">{letter.message}</p>
                         
-                        {letter.sponsor && (
+                        {getSponsorForLetter(letter) && (
                           <div className="mt-3 inline-flex items-center gap-2 bg-muted rounded-lg px-3 py-1.5">
-                            <span className="text-lg">{letter.sponsor.logo}</span>
+                            <span className="text-lg">{getSponsorForLetter(letter)?.logo}</span>
                             <span className="text-xs text-muted-foreground">Sponsored by</span>
-                            <span className="text-sm font-medium text-foreground">{letter.sponsor.name}</span>
+                            <span className="text-sm font-medium text-foreground">{getSponsorForLetter(letter)?.name}</span>
                           </div>
                         )}
                       </div>
                       
                       <div className="flex flex-col gap-2">
                         {letter.status === 'pending' && (
-                          <Button size="sm" variant="green" onClick={(e) => { e.stopPropagation(); handleAcceptLetter(letter.id); }}>
+                          <Button size="sm" variant="green" onClick={(e) => { e.stopPropagation(); if (letter.id) handleAcceptLetter(letter.id); }}>
                             Accept
                           </Button>
                         )}
-                        {letter.status === 'accepted' && !letter.sponsor && (
+                        {letter.status === 'accepted' && !getSponsorForLetter(letter) && (
                           <Button size="sm" variant="gold" onClick={(e) => e.stopPropagation()}>
                             Assign
                           </Button>
                         )}
-                        {letter.status === 'accepted' && letter.sponsor && (
-                          <Button size="sm" variant="christmas" onClick={(e) => { e.stopPropagation(); handleMarkDelivered(letter.id); }}>
+                        {letter.status === 'accepted' && getSponsorForLetter(letter) && (
+                          <Button size="sm" variant="christmas" onClick={(e) => { e.stopPropagation(); if (letter.id) handleMarkDelivered(letter.id); }}>
                             Delivered
                           </Button>
                         )}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -296,25 +312,30 @@ const SantaDashboard: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Category</p>
-                      <p className="text-foreground">{selectedLetter.category}</p>
+                      <p className="text-foreground">{categoryMap[selectedLetter.category] || selectedLetter.category}</p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Message</p>
                       <p className="text-foreground text-sm bg-muted p-3 rounded-lg">{selectedLetter.message}</p>
                     </div>
-                    {selectedLetter.status === 'accepted' && !selectedLetter.sponsor && (
+                    {selectedLetter.status === 'accepted' && !getSponsorForLetter(selectedLetter) && selectedLetter.id && (
                       <div>
                         <p className="text-xs text-muted-foreground mb-2">Assign Sponsor</p>
                         <div className="grid grid-cols-2 gap-2">
                           {sponsors.slice(0, 4).map((sponsor) => (
                             <Button
-                              key={sponsor.name}
+                              key={sponsor.id}
                               variant="outline"
                               size="sm"
                               className="text-xs"
-                              onClick={() => handleAssignSponsor(selectedLetter.id, sponsor)}
+                              onClick={() => handleAssignSponsor(selectedLetter.id!, sponsor)}
                             >
-                              {sponsor.logo} {sponsor.name}
+                              {sponsor.logoUrl ? (
+                                <img src={sponsor.logoUrl} alt={sponsor.companyName} className="w-4 h-4 mr-1" />
+                              ) : (
+                                <span className="mr-1">🏢</span>
+                              )}
+                              {sponsor.companyName}
                             </Button>
                           ))}
                         </div>
@@ -361,15 +382,26 @@ const SantaDashboard: React.FC = () => {
                   Active Sponsors
                 </h3>
                 <div className="space-y-3">
-                  {sponsors.map((sponsor) => (
-                    <div key={sponsor.name} className="flex items-center gap-3 p-2 bg-muted rounded-lg">
-                      <span className="text-xl">{sponsor.logo}</span>
-                      <span className="text-sm font-medium text-foreground">{sponsor.name}</span>
-                      <Badge variant="outline" className="ml-auto text-xs">
-                        {letters.filter(l => l.sponsor?.name === sponsor.name).length} gifts
-                      </Badge>
-                    </div>
-                  ))}
+                  {sponsors.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">No sponsors yet</p>
+                  ) : (
+                    sponsors.map((sponsor) => (
+                      <div key={sponsor.id} className="flex items-center gap-3 p-2 bg-muted rounded-lg">
+                        {sponsor.logoUrl ? (
+                          <img src={sponsor.logoUrl} alt={sponsor.companyName} className="w-8 h-8 rounded" />
+                        ) : (
+                          <span className="text-xl">🏢</span>
+                        )}
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-foreground block">{sponsor.companyName}</span>
+                          <span className="text-xs text-muted-foreground">{sponsor.giftCount} gifts</span>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          ₹{sponsor.totalAmount}
+                        </Badge>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
