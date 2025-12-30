@@ -40,9 +40,8 @@ const HeroSection: React.FC = () => {
           {/* Left Content */}
           <div className="max-w-xl">
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-normal text-foreground leading-tight mb-6 animate-fade-in">
-              Greetings{' '}
-              <span className="block">Santa is coming,</span>
-              <span className="block text-primary">Dear Friends</span>
+              Hey, it's{' '}
+              <span className="block text-primary">Christmas time!</span>
             </h1>
 
             <p className="text-lg text-muted-foreground mb-8 animate-fade-in leading-relaxed" style={{ animationDelay: '0.2s' }}>
