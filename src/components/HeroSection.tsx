@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { PenLine, ChevronDown, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import santaHero from '@/assets/santa-hero.png';
+import santaHero from '@/assets/santa-hero-new.png';
 import stockingImg from '@/assets/stocking.png';
 import giftsImg from '@/assets/gifts.png';
 import snowmanImg from '@/assets/snowman.png';
