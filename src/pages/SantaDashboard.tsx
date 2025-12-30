@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
-// Mock data for letters
 const mockLetters = [
   {
     id: 1,
@@ -95,7 +94,7 @@ const SantaDashboard: React.FC = () => {
     setLetters(letters.map(letter => 
       letter.id === id ? { ...letter, status: 'accepted' } : letter
     ));
-    toast.success('Letter accepted! Ready for sponsor assignment.');
+    toast.success('Letter accepted!');
   };
 
   const handleAssignSponsor = (letterId: number, sponsor: typeof sponsors[0]) => {
@@ -115,11 +114,11 @@ const SantaDashboard: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="secondary" className="bg-amber-500/20 text-amber-700 border-amber-300">Pending</Badge>;
+        return <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-amber-200">Pending</Badge>;
       case 'accepted':
-        return <Badge variant="secondary" className="bg-blue-500/20 text-blue-700 border-blue-300">Accepted</Badge>;
+        return <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">Accepted</Badge>;
       case 'delivered':
-        return <Badge variant="secondary" className="bg-green-500/20 text-green-700 border-green-300">Delivered</Badge>;
+        return <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">Delivered</Badge>;
       default:
         return null;
     }
@@ -135,8 +134,8 @@ const SantaDashboard: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Santa's Dashboard - Manage Letters & Deliveries</title>
-        <meta name="description" content="Santa's command center for managing letters, assigning sponsors, and planning gift deliveries." />
+        <title>Santa's Dashboard - SecretSanta</title>
+        <meta name="description" content="Santa's command center for managing letters and deliveries." />
       </Helmet>
       
       <Navbar />
@@ -145,11 +144,11 @@ const SantaDashboard: React.FC = () => {
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
+            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">
               🎅 Santa's Dashboard
             </h1>
             <p className="text-muted-foreground">
-              Manage letters, assign sponsors, and plan your magical delivery route!
+              Manage letters, assign sponsors, and plan deliveries!
             </p>
           </div>
 
@@ -161,10 +160,10 @@ const SantaDashboard: React.FC = () => {
               { label: 'Accepted', value: stats.accepted, icon: CheckCircle2, color: 'bg-blue-500' },
               { label: 'Delivered', value: stats.delivered, icon: Gift, color: 'bg-green-500' },
             ].map((stat, index) => (
-              <div key={index} className="bg-card border border-border rounded-xl p-4 shadow-card">
+              <div key={index} className="bg-card border border-border rounded-xl p-4 shadow-soft">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 ${stat.color} rounded-lg flex items-center justify-center`}>
-                    <stat.icon className="w-5 h-5 text-primary-foreground" />
+                    <stat.icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-foreground">{stat.value}</p>
@@ -179,7 +178,7 @@ const SantaDashboard: React.FC = () => {
             {/* Letters List */}
             <div className="lg:col-span-2">
               {/* Filters */}
-              <div className="bg-card border border-border rounded-xl p-4 mb-6 shadow-card">
+              <div className="bg-card border border-border rounded-xl p-4 mb-6 shadow-soft">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1">
                     <Input
@@ -221,7 +220,7 @@ const SantaDashboard: React.FC = () => {
                 {filteredLetters.map((letter) => (
                   <div
                     key={letter.id}
-                    className={`bg-card border rounded-xl p-5 shadow-card transition-all hover:shadow-lg cursor-pointer ${
+                    className={`bg-card border rounded-xl p-5 shadow-soft transition-all hover:shadow-card cursor-pointer ${
                       selectedLetter?.id === letter.id ? 'border-primary ring-2 ring-primary/20' : 'border-border'
                     }`}
                     onClick={() => setSelectedLetter(letter)}
@@ -229,7 +228,7 @@ const SantaDashboard: React.FC = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-display font-bold text-foreground">{letter.childName}</h3>
+                          <h3 className="font-display text-foreground">{letter.childName}</h3>
                           <Badge variant="outline" className="text-xs">Age {letter.age}</Badge>
                           {getStatusBadge(letter.status)}
                         </div>
@@ -281,8 +280,8 @@ const SantaDashboard: React.FC = () => {
             <div className="space-y-6">
               {/* Selected Letter Details */}
               {selectedLetter && (
-                <div className="bg-card border border-border rounded-xl p-5 shadow-card">
-                  <h3 className="font-display font-bold text-foreground mb-4 flex items-center gap-2">
+                <div className="bg-card border border-border rounded-xl p-5 shadow-soft">
+                  <h3 className="font-display text-foreground mb-4 flex items-center gap-2">
                     <Eye className="w-5 h-5 text-primary" />
                     Letter Details
                   </h3>
@@ -326,21 +325,17 @@ const SantaDashboard: React.FC = () => {
               )}
 
               {/* Map Preview */}
-              <div className="bg-card border border-border rounded-xl p-5 shadow-card">
-                <h3 className="font-display font-bold text-foreground mb-4 flex items-center gap-2">
+              <div className="bg-card border border-border rounded-xl p-5 shadow-soft">
+                <h3 className="font-display text-foreground mb-4 flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-primary" />
                   Delivery Map
                 </h3>
-                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-200" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <MapPin className="w-12 h-12 text-primary mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">Interactive map coming soon</p>
-                      <p className="text-xs text-muted-foreground mt-1">{letters.length} delivery points</p>
-                    </div>
+                <div className="aspect-video bg-gradient-soft rounded-lg flex items-center justify-center relative overflow-hidden">
+                  <div className="text-center">
+                    <MapPin className="w-12 h-12 text-primary mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">Interactive map coming soon</p>
+                    <p className="text-xs text-muted-foreground mt-1">{letters.length} delivery points</p>
                   </div>
-                  {/* Decorative dots representing locations */}
                   {letters.slice(0, 5).map((letter, i) => (
                     <div
                       key={letter.id}
@@ -359,10 +354,10 @@ const SantaDashboard: React.FC = () => {
                 </Button>
               </div>
 
-              {/* Quick Stats */}
-              <div className="bg-card border border-border rounded-xl p-5 shadow-card">
-                <h3 className="font-display font-bold text-foreground mb-4 flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-christmas-gold" />
+              {/* Active Sponsors */}
+              <div className="bg-card border border-border rounded-xl p-5 shadow-soft">
+                <h3 className="font-display text-foreground mb-4 flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-amber-500" />
                   Active Sponsors
                 </h3>
                 <div className="space-y-3">
