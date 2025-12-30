@@ -33,9 +33,32 @@ export const saveLetter = async (letterData: Omit<Letter, 'id' | 'status' | 'cre
     
     // Upload drawing if provided
     if (drawingFile) {
-      const drawingRef = ref(storage, `letters/${Date.now()}_${drawingFile.name}`);
-      await uploadBytes(drawingRef, drawingFile);
-      drawingUrl = await getDownloadURL(drawingRef);
+      try {
+        // Validate file size (max 5MB)
+        if (drawingFile.size > 5 * 1024 * 1024) {
+          throw new Error('File size exceeds 5MB limit');
+        }
+        
+        // Validate file type
+        if (!drawingFile.type.startsWith('image/')) {
+          throw new Error('File must be an image');
+        }
+        
+        const drawingRef = ref(storage, `letters/${Date.now()}_${drawingFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
+        await uploadBytes(drawingRef, drawingFile);
+        drawingUrl = await getDownloadURL(drawingRef);
+      } catch (uploadError: any) {
+        console.error('Error uploading drawing:', uploadError);
+        // If upload fails, continue without the drawing
+        if (uploadError.code === 'storage/unauthorized') {
+          throw new Error('Storage access denied. Please check Firebase Storage rules.');
+        } else if (uploadError.code === 'storage/canceled') {
+          throw new Error('Upload was canceled.');
+        } else if (uploadError.code === 'storage/unknown') {
+          throw new Error('Unknown storage error. Please check your Firebase configuration.');
+        }
+        throw uploadError;
+      }
     }
 
     // Save letter to Firestore

@@ -36,9 +36,32 @@ export const saveSponsor = async (
     
     // Upload logo if provided
     if (logoFile) {
-      const logoRef = ref(storage, `sponsors/${Date.now()}_${logoFile.name}`);
-      await uploadBytes(logoRef, logoFile);
-      logoUrl = await getDownloadURL(logoRef);
+      try {
+        // Validate file size (max 5MB)
+        if (logoFile.size > 5 * 1024 * 1024) {
+          throw new Error('File size exceeds 5MB limit');
+        }
+        
+        // Validate file type
+        if (!logoFile.type.startsWith('image/')) {
+          throw new Error('File must be an image');
+        }
+        
+        const logoRef = ref(storage, `sponsors/${Date.now()}_${logoFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
+        await uploadBytes(logoRef, logoFile);
+        logoUrl = await getDownloadURL(logoRef);
+      } catch (uploadError: any) {
+        console.error('Error uploading logo:', uploadError);
+        // If upload fails, continue without the logo
+        if (uploadError.code === 'storage/unauthorized') {
+          throw new Error('Storage access denied. Please check Firebase Storage rules.');
+        } else if (uploadError.code === 'storage/canceled') {
+          throw new Error('Upload was canceled.');
+        } else if (uploadError.code === 'storage/unknown') {
+          throw new Error('Unknown storage error. Please check your Firebase configuration.');
+        }
+        throw uploadError;
+      }
     }
 
     // Calculate total amount
