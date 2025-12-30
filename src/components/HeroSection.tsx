@@ -24,21 +24,21 @@ const HeroSection: React.FC = () => {
           {/* Left Content */}
           <div className="max-w-xl order-2 lg:order-1">
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-foreground leading-[1.1] mb-6 animate-fade-in">
-              Write to <span className="block text-primary italic">Santa Claus!</span>
+              Hey, it's <span className="block text-primary italic">Christmas time!</span>
             </h1>
 
             <p
               className="text-base md:text-lg text-muted-foreground mb-8 animate-fade-in leading-relaxed max-w-md"
               style={{ animationDelay: "0.2s" }}
             >
-              Share your Christmas wishes with Santa and let our generous sponsors help make your dreams come true this holiday season.
+              Find the perfect holiday gift for everyone on your list this year, no matter what's your budget.
             </p>
 
             <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <Link to="/write-letter">
                 <Button variant="christmas" size="lg" className="gap-2 text-base px-8">
                   <PenLine className="w-5 h-5" />
-                  Write Your Letter
+                  Explore Now
                 </Button>
               </Link>
             </div>
@@ -47,15 +47,16 @@ const HeroSection: React.FC = () => {
             <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               <div className="inline-flex items-center gap-4 bg-card/90 backdrop-blur-sm rounded-2xl py-3 px-5 shadow-card border border-border/30">
                 <div className="w-11 h-11 rounded-full bg-gradient-to-br from-santa-pink to-santa-peach flex items-center justify-center text-xl flex-shrink-0">
-                  🎄
+                  👧
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground text-sm">Emma, Age 8</p>
-                  <p className="text-xs text-muted-foreground mb-1">"Santa answered my letter!"</p>
+                  <p className="font-semibold text-foreground text-sm">Anima Agrawal</p>
+                  <p className="text-xs text-muted-foreground mb-1">Good Stuff...</p>
                   <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
+                    {[...Array(4)].map((_, i) => (
                       <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                     ))}
+                    <Star className="w-3 h-3 text-amber-400/50" />
                   </div>
                 </div>
               </div>
