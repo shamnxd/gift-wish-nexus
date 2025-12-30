@@ -1,19 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { PenLine, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import santaHero from '@/assets/santa-hero-new.png';
-import stockingImg from '@/assets/stocking.png';
+import React from "react";
+import { Link } from "react-router-dom";
+import { PenLine, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import santaHero from "@/assets/santa-hero-new.png";
+import stockingImg from "@/assets/stocking.png";
 
 const HeroSection: React.FC = () => {
   return (
     <section className="relative min-h-screen bg-gradient-hero overflow-hidden flex items-center pt-20 pb-12">
       {/* Decorative stocking */}
-      <img 
+      {/* <img 
         src={stockingImg} 
         alt="" 
         className="absolute -top-2 left-0 w-16 md:w-20 opacity-90 pointer-events-none"
-      />
+      /> */}
 
       {/* Decorative gradient circles */}
       <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] rounded-full bg-santa-peach/20 blur-3xl pointer-events-none" />
@@ -25,15 +25,17 @@ const HeroSection: React.FC = () => {
           {/* Left Content */}
           <div className="max-w-xl order-2 lg:order-1">
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-foreground leading-[1.1] mb-6 animate-fade-in">
-              Hey, it's{' '}
-              <span className="block text-primary italic">Christmas time!</span>
+              Hey, it's <span className="block text-primary italic">Christmas time!</span>
             </h1>
 
-            <p className="text-base md:text-lg text-muted-foreground mb-8 animate-fade-in leading-relaxed max-w-md" style={{ animationDelay: '0.2s' }}>
+            <p
+              className="text-base md:text-lg text-muted-foreground mb-8 animate-fade-in leading-relaxed max-w-md"
+              style={{ animationDelay: "0.2s" }}
+            >
               Find the perfect holiday gift for everyone on your list this year, no matter what's your budget.
             </p>
 
-            <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <Link to="/write-letter">
                 <Button variant="christmas" size="lg" className="gap-2 text-base px-8">
                   <PenLine className="w-5 h-5" />
@@ -43,7 +45,7 @@ const HeroSection: React.FC = () => {
             </div>
 
             {/* Testimonial Card */}
-            <div className="mt-10 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="mt-10 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               <div className="inline-flex items-center gap-4 bg-card/90 backdrop-blur-sm rounded-2xl py-3 px-5 shadow-card border border-border/30">
                 <div className="w-11 h-11 rounded-full bg-gradient-to-br from-santa-pink to-santa-peach flex items-center justify-center text-xl flex-shrink-0">
                   👧
@@ -64,7 +66,7 @@ const HeroSection: React.FC = () => {
 
           {/* Right Content - Santa Image in Card Frame */}
           <div className="relative flex justify-center lg:justify-end order-1 lg:order-2">
-            <div className="relative animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="relative animate-fade-in" style={{ animationDelay: "0.3s" }}>
               {/* Card frame with rounded corners */}
               <div className="relative bg-gradient-to-b from-santa-sky/40 via-santa-pink/20 to-santa-peach/30 rounded-3xl p-4 shadow-xl overflow-hidden">
                 {/* Snowflake decorations inside card */}
@@ -75,14 +77,14 @@ const HeroSection: React.FC = () => {
                   <div className="absolute top-12 right-1/4 text-white/60 text-xs">❄</div>
                   <div className="absolute top-20 right-6 text-white/50 text-base">❄</div>
                 </div>
-                
-                <img 
-                  src={santaHero} 
+
+                <img
+                  src={santaHero}
                   alt="Santa Claus with Christmas tree"
                   className="relative z-10 w-[280px] sm:w-[320px] md:w-[380px] lg:w-[420px] h-auto drop-shadow-lg"
                 />
               </div>
-              
+
               {/* Decorative dots pattern */}
               <div className="absolute -top-4 -right-4 w-24 h-24 opacity-30 pointer-events-none">
                 <div className="grid grid-cols-4 gap-2">
