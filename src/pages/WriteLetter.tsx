@@ -44,10 +44,7 @@ const WriteLetter: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
     setIsSubmitting(false);
     setIsSubmitted(true);
     toast.success('Your letter has been sent to Santa!');
@@ -64,21 +61,21 @@ const WriteLetter: React.FC = () => {
     return (
       <>
         <Helmet>
-          <title>Letter Sent! - Santa's Letters</title>
+          <title>Letter Sent! - SecretSanta</title>
         </Helmet>
         
         <Snowfall />
         <Navbar />
         
-        <main className="min-h-screen bg-background pt-24 pb-16">
+        <main className="min-h-screen bg-gradient-hero pt-24 pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
               <div className="animate-scale-in">
-                <div className="w-24 h-24 bg-gradient-green rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg animate-glow-pulse">
-                  <CheckCircle2 className="w-12 h-12 text-secondary-foreground" />
+                <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-green">
+                  <CheckCircle2 className="w-12 h-12 text-primary-foreground" />
                 </div>
                 
-                <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">
                   Ho Ho Ho! 🎅
                 </h1>
                 
@@ -87,9 +84,9 @@ const WriteLetter: React.FC = () => {
                 </p>
                 
                 <div className="bg-card border border-border rounded-2xl p-8 mb-8 shadow-card">
-                  <Sparkles className="w-8 h-8 text-christmas-gold mx-auto mb-4" />
+                  <Sparkles className="w-8 h-8 text-amber-500 mx-auto mb-4" />
                   <p className="text-lg text-foreground leading-relaxed">
-                    Your letter has been magically delivered to the North Pole! Santa and his elves are reading it with big smiles on their faces. Keep being wonderful, and remember - Santa sees all the good things you do!
+                    Your letter has been magically delivered to the North Pole! Santa and his elves are reading it with big smiles. Keep being wonderful!
                   </p>
                 </div>
                 
@@ -115,14 +112,14 @@ const WriteLetter: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Write Your Letter to Santa - Santa's Letters</title>
+        <title>Write Your Letter to Santa - SecretSanta</title>
         <meta name="description" content="Write your heartfelt letter to Santa Claus. Share your Christmas wishes and let the magic begin!" />
       </Helmet>
       
       <Snowfall />
       <Navbar />
       
-      <main className="min-h-screen bg-background pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-hero pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             {/* Header */}
@@ -132,7 +129,7 @@ const WriteLetter: React.FC = () => {
                 <span className="text-primary text-sm font-medium">Write Your Letter</span>
               </div>
               
-              <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+              <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">
                 Dear <span className="text-primary">Santa</span>...
               </h1>
               
@@ -142,10 +139,10 @@ const WriteLetter: React.FC = () => {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Info */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
                   <Gift className="w-5 h-5 text-primary" />
                   About You
                 </h2>
@@ -179,9 +176,9 @@ const WriteLetter: React.FC = () => {
               </div>
 
               {/* Gift Category */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-christmas-gold" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-500" />
                   Gift Category
                 </h2>
                 
@@ -206,9 +203,9 @@ const WriteLetter: React.FC = () => {
               </div>
 
               {/* Letter */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <PenLine className="w-5 h-5 text-secondary" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <PenLine className="w-5 h-5 text-primary" />
                   Your Letter to Santa
                 </h2>
                 
@@ -225,9 +222,9 @@ const WriteLetter: React.FC = () => {
               </div>
 
               {/* Location */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-primary" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-accent" />
                   Your Location
                 </h2>
                 
@@ -247,15 +244,15 @@ const WriteLetter: React.FC = () => {
               </div>
 
               {/* Drawing Upload */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <Upload className="w-5 h-5 text-christmas-gold" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <Upload className="w-5 h-5 text-amber-500" />
                   Add a Drawing (Optional)
                 </h2>
                 
                 <div className="space-y-4">
                   <Label htmlFor="drawing">Upload your artwork</Label>
-                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30">
                     <input
                       type="file"
                       id="drawing"
@@ -266,7 +263,7 @@ const WriteLetter: React.FC = () => {
                     <label htmlFor="drawing" className="cursor-pointer">
                       {formData.drawing ? (
                         <div className="space-y-2">
-                          <CheckCircle2 className="w-10 h-10 text-secondary mx-auto" />
+                          <CheckCircle2 className="w-10 h-10 text-primary mx-auto" />
                           <p className="text-foreground font-medium">{formData.drawing.name}</p>
                           <p className="text-muted-foreground text-sm">Click to change</p>
                         </div>

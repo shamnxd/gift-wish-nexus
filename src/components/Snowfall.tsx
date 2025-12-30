@@ -10,10 +10,11 @@ const Snowfall: React.FC = () => {
           key={i}
           className="snowflake animate-snowfall"
           style={{
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${8 + Math.random() * 7}s`,
+            animationDelay: `${Math.random() * 8}s`,
+            animationDuration: `${10 + Math.random() * 8}s`,
             left: `${Math.random() * 100}%`,
-            fontSize: `${0.5 + Math.random() * 1}rem`,
+            fontSize: `${0.4 + Math.random() * 0.6}rem`,
+            opacity: 0.4 + Math.random() * 0.3,
           }}
         >
           ❄

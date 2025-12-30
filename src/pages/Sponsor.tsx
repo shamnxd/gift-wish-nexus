@@ -57,21 +57,21 @@ const Sponsor: React.FC = () => {
     return (
       <>
         <Helmet>
-          <title>Thank You for Sponsoring! - Santa's Letters</title>
+          <title>Thank You for Sponsoring! - SecretSanta</title>
         </Helmet>
         
         <Snowfall />
         <Navbar />
         
-        <main className="min-h-screen bg-background pt-24 pb-16">
+        <main className="min-h-screen bg-gradient-hero pt-24 pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
               <div className="animate-scale-in">
-                <div className="w-24 h-24 bg-gradient-christmas rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg animate-glow-pulse">
-                  <Heart className="w-12 h-12 text-primary-foreground fill-current" />
+                <div className="w-24 h-24 bg-accent rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+                  <Heart className="w-12 h-12 text-accent-foreground fill-current" />
                 </div>
                 
-                <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">
                   Thank You! 🎄
                 </h1>
                 
@@ -80,9 +80,9 @@ const Sponsor: React.FC = () => {
                 </p>
                 
                 <div className="bg-card border border-border rounded-2xl p-8 mb-8 shadow-card">
-                  <Sparkles className="w-8 h-8 text-christmas-gold mx-auto mb-4" />
+                  <Sparkles className="w-8 h-8 text-amber-500 mx-auto mb-4" />
                   <p className="text-lg text-foreground leading-relaxed">
-                    Your generous sponsorship of {formData.giftCount === 'custom' ? formData.customCount : formData.giftCount} gifts will bring joy to children this Christmas. Your company logo will be proudly displayed alongside sponsored gifts, showing your commitment to spreading holiday cheer!
+                    Your generous sponsorship of {formData.giftCount === 'custom' ? formData.customCount : formData.giftCount} gifts will bring joy to children this Christmas!
                   </p>
                 </div>
                 
@@ -108,28 +108,28 @@ const Sponsor: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Become a Sponsor - Santa's Letters</title>
-        <meta name="description" content="Sponsor Christmas gifts and make a difference in children's lives. Your brand will be proudly displayed alongside the joy you help create." />
+        <title>Become a Sponsor - SecretSanta</title>
+        <meta name="description" content="Sponsor Christmas gifts and make a difference in children's lives." />
       </Helmet>
       
       <Snowfall />
       <Navbar />
       
-      <main className="min-h-screen bg-background pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-hero pt-24 pb-16">
         <div className="container mx-auto px-4">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-6">
-              <Heart className="w-4 h-4 text-primary" />
-              <span className="text-primary text-sm font-medium">Make a Difference</span>
+            <div className="inline-flex items-center gap-2 bg-accent/10 rounded-full px-4 py-2 mb-6">
+              <Heart className="w-4 h-4 text-accent" />
+              <span className="text-accent text-sm font-medium">Make a Difference</span>
             </div>
             
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">
               Become a <span className="text-primary">Gift Sponsor</span>
             </h1>
             
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Partner with Santa to bring joy to children worldwide. Your brand, their smiles – a perfect Christmas gift!
+              Partner with Santa to bring joy to children worldwide. Your brand, their smiles!
             </p>
           </div>
 
@@ -140,11 +140,11 @@ const Sponsor: React.FC = () => {
               { icon: Heart, title: 'Social Impact', desc: 'Make a real difference in children\'s lives' },
               { icon: Globe, title: 'Community Trust', desc: 'Build goodwill and positive brand association' },
             ].map((benefit, index) => (
-              <div key={index} className="bg-card border border-border rounded-2xl p-6 text-center shadow-card hover:shadow-lg transition-shadow">
-                <div className="w-12 h-12 bg-gradient-christmas rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div key={index} className="bg-card border border-border rounded-2xl p-6 text-center shadow-soft hover:shadow-card transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4 shadow-green">
                   <benefit.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <h3 className="font-display font-bold text-foreground mb-2">{benefit.title}</h3>
+                <h3 className="font-display text-foreground mb-2">{benefit.title}</h3>
                 <p className="text-muted-foreground text-sm">{benefit.desc}</p>
               </div>
             ))}
@@ -152,10 +152,10 @@ const Sponsor: React.FC = () => {
 
           {/* Form */}
           <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Company Info */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-primary" />
                   Company Information
                 </h2>
@@ -187,9 +187,9 @@ const Sponsor: React.FC = () => {
               </div>
 
               {/* Sponsorship Details */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-christmas-gold" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <Gift className="w-5 h-5 text-amber-500" />
                   Sponsorship Details
                 </h2>
                 
@@ -242,15 +242,15 @@ const Sponsor: React.FC = () => {
               </div>
 
               {/* Logo Upload */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
-                <h2 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                  <Upload className="w-5 h-5 text-secondary" />
+              <div className="bg-card border border-border rounded-2xl p-6 shadow-soft">
+                <h2 className="font-display text-xl text-foreground mb-6 flex items-center gap-2">
+                  <Upload className="w-5 h-5 text-primary" />
                   Company Logo
                 </h2>
                 
                 <div className="space-y-4">
                   <Label htmlFor="logo">Upload your logo</Label>
-                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30">
                     <input
                       type="file"
                       id="logo"
@@ -261,7 +261,7 @@ const Sponsor: React.FC = () => {
                     <label htmlFor="logo" className="cursor-pointer">
                       {formData.logo ? (
                         <div className="space-y-2">
-                          <CheckCircle2 className="w-10 h-10 text-secondary mx-auto" />
+                          <CheckCircle2 className="w-10 h-10 text-primary mx-auto" />
                           <p className="text-foreground font-medium">{formData.logo.name}</p>
                           <p className="text-muted-foreground text-sm">Click to change</p>
                         </div>
@@ -274,9 +274,6 @@ const Sponsor: React.FC = () => {
                       )}
                     </label>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Your logo will be displayed on all gifts you sponsor!
-                  </p>
                 </div>
               </div>
 
