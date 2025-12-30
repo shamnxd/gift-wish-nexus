@@ -20,13 +20,13 @@ const HeroSection: React.FC = () => {
       <img 
         src={giftsImg} 
         alt="" 
-        className="absolute bottom-20 left-4 md:left-12 w-24 md:w-36 animate-float-reverse opacity-90 pointer-events-none"
+        className="absolute bottom-8 left-4 md:left-12 w-20 md:w-28 animate-float-reverse opacity-90 pointer-events-none hidden lg:block"
         style={{ animationDelay: '1s' }}
       />
       <img 
         src={snowmanImg} 
         alt="" 
-        className="absolute bottom-16 right-4 md:right-12 w-20 md:w-28 animate-float opacity-90 pointer-events-none"
+        className="absolute bottom-8 right-4 md:right-12 w-16 md:w-24 animate-float opacity-90 pointer-events-none hidden lg:block"
         style={{ animationDelay: '0.8s' }}
       />
 
@@ -91,8 +91,8 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-4 md:left-8 flex items-center gap-3 animate-bounce-gentle">
+        {/* Scroll Indicator - Hidden on mobile to avoid overlap */}
+        <div className="absolute bottom-8 left-4 md:left-8 hidden md:flex items-center gap-3 animate-bounce-gentle">
           <div className="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center bg-card/50 backdrop-blur-sm">
             <ChevronDown className="w-5 h-5 text-foreground" />
           </div>
