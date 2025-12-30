@@ -24,21 +24,21 @@ const HeroSection: React.FC = () => {
           {/* Left Content */}
           <div className="max-w-xl order-2 lg:order-1">
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal text-foreground leading-[1.1] mb-6 animate-fade-in">
-              Hey, it's <span className="block text-primary italic">Christmas time!</span>
+              Write to <span className="block text-primary italic">Santa Claus!</span>
             </h1>
 
             <p
               className="text-base md:text-lg text-muted-foreground mb-8 animate-fade-in leading-relaxed max-w-md"
               style={{ animationDelay: "0.2s" }}
             >
-              Find the perfect holiday gift for everyone on your list this year, no matter what's your budget.
+              Share your Christmas wishes with Santa and let our generous sponsors help make your dreams come true this holiday season.
             </p>
 
             <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <Link to="/write-letter">
                 <Button variant="christmas" size="lg" className="gap-2 text-base px-8">
                   <PenLine className="w-5 h-5" />
-                  Explore Now
+                  Write Your Letter
                 </Button>
               </Link>
             </div>
