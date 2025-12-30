@@ -1,13 +1,31 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import Navbar from '@/components/Navbar';
+import HeroSection from '@/components/HeroSection';
+import SponsorCarousel from '@/components/SponsorCarousel';
+import HowItWorks from '@/components/HowItWorks';
+import Footer from '@/components/Footer';
+import Snowfall from '@/components/Snowfall';
 
-const Index = () => {
+const Index: React.FC = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      <Helmet>
+        <title>Santa's Letters - Write to Santa & Make Christmas Magical</title>
+        <meta name="description" content="Write your letter to Santa, share your Christmas wishes, and let our generous sponsors help bring joy to your heart. Join thousands of children spreading holiday magic." />
+      </Helmet>
+      
+      <Snowfall />
+      <Navbar />
+      
+      <main>
+        <HeroSection />
+        <SponsorCarousel />
+        <HowItWorks />
+      </main>
+      
+      <Footer />
+    </>
   );
 };
 
