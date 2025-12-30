@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { PenLine, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import santaHero from "@/assets/santa-hero-new.png";
-import stockingImg from "@/assets/stocking.png";
+import santaHero from "@/assets/santa-hero-transparent.png";
 
 const HeroSection: React.FC = () => {
   return (
@@ -64,35 +63,14 @@ const HeroSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Content - Santa Image in Card Frame */}
+          {/* Right Content - Santa Image */}
           <div className="relative flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              {/* Card frame with rounded corners */}
-              <div className="relative bg-gradient-to-b from-santa-sky/40 via-santa-pink/20 to-santa-peach/30 rounded-3xl p-4 shadow-xl overflow-hidden">
-                {/* Snowflake decorations inside card */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute top-4 left-6 text-white/60 text-xl">❄</div>
-                  <div className="absolute top-8 right-10 text-white/50 text-sm">❄</div>
-                  <div className="absolute top-16 left-1/4 text-white/40 text-lg">❄</div>
-                  <div className="absolute top-12 right-1/4 text-white/60 text-xs">❄</div>
-                  <div className="absolute top-20 right-6 text-white/50 text-base">❄</div>
-                </div>
-
-                <img
-                  src={santaHero}
-                  alt="Santa Claus with Christmas tree"
-                  className="relative z-10 w-[280px] sm:w-[320px] md:w-[380px] lg:w-[420px] h-auto drop-shadow-lg"
-                />
-              </div>
-
-              {/* Decorative dots pattern */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 opacity-30 pointer-events-none">
-                <div className="grid grid-cols-4 gap-2">
-                  {[...Array(16)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 rounded-full bg-primary/60" />
-                  ))}
-                </div>
-              </div>
+              <img
+                src={santaHero}
+                alt="Santa Claus with Christmas tree"
+                className="w-[300px] sm:w-[360px] md:w-[420px] lg:w-[480px] h-auto drop-shadow-2xl"
+              />
             </div>
           </div>
         </div>
